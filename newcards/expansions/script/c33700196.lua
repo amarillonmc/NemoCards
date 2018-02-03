@@ -60,7 +60,7 @@ function c33700196.initial_effect(c)
 	ed:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	ed:SetCode(EVENT_SUMMON_SUCCESS)
 	ed:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	ed:SetOperation(c33700192.desreg)
+	ed:SetOperation(c33700196.desreg)
 	c:RegisterEffect(ed)
 	local ee=ed:Clone()
 	ee:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -71,19 +71,19 @@ function c33700196.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_LEAVE_FIELD)
-	e1:SetCondition(c79126789.drcon)
-	e1:SetTarget(c79126789.drtg)
-	e1:SetOperation(c79126789.drop)
+	e1:SetCondition(c33700196.drcon)
+	e1:SetTarget(c33700196.drtg)
+	e1:SetOperation(c33700196.drop)
 	c:RegisterEffect(e1)
 end
-function c33700192.desreg(e,tp,eg,ep,ev,re,r,rp)
+function c33700196.desreg(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	c:SetTurnCounter(0)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e0:SetCode(EVENT_PHASE_START+PHASE_STANDBY)
 	e0:SetCountLimit(1)
-	e0:SetOperation(c77565204.ctop)
+	e0:SetOperation(c33700196.ctop)
 	Duel.RegisterEffect(e0,tp)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -93,12 +93,12 @@ function c33700192.desreg(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCountLimit(1)
 	--e1:SetLabelObject(e0)
 	e1:SetReset(RESET_EVENT+0x1ee0000+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,2)
-	e1:SetCondition(c33700192.descon)
-	e1:SetOperation(c33700192.desop)
+	e1:SetCondition(c33700196.descon)
+	e1:SetOperation(c33700196.desop)
 	c:RegisterEffect(e1)
 	c:CreateEffectRelation(e0)
 end
-function c33700192.ctop(e,tp,eg,ep,ev,re,r,rp)
+function c33700196.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local ct=c:GetTurnCounter()
 	if not c:IsRelateToEffect(e) or ct>=2 then
@@ -110,18 +110,18 @@ function c33700192.ctop(e,tp,eg,ep,ev,re,r,rp)
 	ct=ct+1
 	c:SetTurnCounter(ct)
 end
-function c33700192.descon(e,tp,eg,ep,ev,re,r,rp)
+function c33700196.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp and e:GetHandler():GetTurnCounter()==2
 end
-function c33700192.desop(e,tp,eg,ep,ev,re,r,rp)
+function c33700196.desop(e,tp,eg,ep,ev,re,r,rp)
 	--if e:GetHandler():IsRelateToEffect(e:GetLabelObject()) then
 		Duel.Destroy(e:GetHandler(),REASON_EFFECT)
 	--end
 end
-function c79126789.drcon(e,tp,eg,ep,ev,re,r,rp)
+function c33700196.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return true
 end
-function c79126789.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c33700196.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetTargetPlayer(tp)
 	if re==e then
