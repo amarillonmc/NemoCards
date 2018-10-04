@@ -20,7 +20,7 @@ function c33700331.check(c,tp)
 	local g1=Duel.GetMatchingGroup(c33700331.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,c)
 	local zone=0
 	for tc in aux.Next(g1) do
-		zone=bit.bor(zone,tc:GetColumnZone(LOCATION_MZONE,0,0,tp))
+		zone=bit.bor(zone,tc:GetColumnZone(LOCATION_MZONE,tp))
 	end
 	return zone>0,zone
 end
@@ -46,5 +46,5 @@ function c33700331.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c33700331.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return ep~=tp and c:GetBattleTarget()==nil and c:IsRelateToBattle() and c:GetColumnGroup():Filter(Card.IsControler,nil,tp):GetCount()==0
+	return ep==1-tp and c:GetBattleTarget()==nil and c:IsRelateToBattle() and c:GetColumnGroup():Filter(Card.IsControler,nil,tp):GetCount()==0
 end
