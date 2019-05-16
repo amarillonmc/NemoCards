@@ -8,5 +8,6 @@ Featuring:
 - Other Generic cards in HASS
 - Additional supports of Anifriends in HASS
 - Cards from new card packs: SBRT, ALAW and HTUD
+- More cards from HTUD
 
-417 cards in total as of 190115
+417 cards in total as of 190515
