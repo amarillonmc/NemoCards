@@ -10,4 +10,7 @@ Featuring:
 - Cards from new card packs: SBRT, ALAW and HTUD
 - More cards from HTUD
 
-417 cards in total as of 190515
+523 cards in total as of 190515
+
+Credits to scripters:
+人形, AlphaKretin, Nanahira, Lyris, real_scl, justfish and more
