@@ -9,8 +9,9 @@ Featuring:
 - Additional supports of Anifriends in HASS
 - Cards from new card packs: SBRT, ALAW and HTUD
 - More cards from HTUD
+- Cards from FUIP and NCNL packs
 
-523 cards in total as of 190515
+651 cards in total as of 210418
 
 Credits to scripters:
-人形, AlphaKretin, Nanahira, Lyris, real_scl, justfish and more
+人形, AlphaKretin, Nanahira, Lyris, real_scl, justfish, RAIKAI, T and more
