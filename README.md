@@ -11,7 +11,7 @@ Featuring:
 - More cards from HTUD
 - Cards from FUIP and NCNL packs
 
-651 cards in total as of 210418
+695 cards in total as of 210716
 
 Credits to scripters:
-人形, AlphaKretin, Nanahira, Lyris, real_scl, justfish, RAIKAI, T and more
+人形, AlphaKretin, Nanahira, Lyris, real_scl, justfish, RAIKAI, 静静, T and more
