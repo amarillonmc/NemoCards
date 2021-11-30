@@ -19,7 +19,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ct=1
 	m[ct]=aux.Stringid(m,0) n[ct]=1 ct=ct+1
 	if t2 then m[ct]=aux.Stringid(m,1) n[ct]=2 ct=ct+1 end
-	local sp=Duel.SelectOption(tp,table.unpack(m))
+	local sp=Duel.SelectOption(1-tp,table.unpack(m))
 	op=n[sp+1]
 	Duel.BreakEffect()
 	if op==1 then
@@ -31,7 +31,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetTargetRange(0,1)
 		e1:SetValue(cm.damval)
 		Duel.RegisterEffect(e1,tp)
-	else op==2 then
+	elseif op==2 then
 		Duel.Draw(tp,3,REASON_EFFECT)
 	end
 end
