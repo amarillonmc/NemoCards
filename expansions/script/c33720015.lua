@@ -1,13 +1,7 @@
 --勇敢英姿 觉醒法师
 --Scripted by: XGlitchy30
-function GetID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local scard=_G[str]
-	local s_id=tonumber(string.sub(str,2))
-	return scard,s_id
-end
-local s,id=GetID()
+local id=33720015
+local s=_G["c"..tostring(id)]
 function s.initial_effect(c)
 	--cannot special summon
 	local e0=Effect.CreateEffect(c)
@@ -68,7 +62,7 @@ function s.acop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(300)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
 		c:RegisterEffect(e1)
 	end
 end
