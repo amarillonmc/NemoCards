@@ -27,6 +27,9 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e3)
 	
 end
+function cm.ovfilter(c)
+	return c:IsFaceup() and not c:IsCode(m) and c:GetOverlayCount()==0 and c:IsType(TYPE_XYZ)
+end
 function cm.atkval(e,c)
 	return c:GetOverlayCount()*500
 end

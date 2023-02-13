@@ -18,13 +18,19 @@ function cm.initial_effect(c)
 	e2:SetCondition(cm.discon)
 	e2:SetOperation(cm.disop)
 	c:RegisterEffect(e2)
-	--leav effect
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e3:SetProperty(EFFECT_FLAG_DELAY)
-	e3:SetCode(EVENT_LEAVE_FIELD)
-	e3:SetOperation(cm.tdop)
-	c:RegisterEffect(e3)
+	--leave
+	local e6=Effect.CreateEffect(c)
+	e6:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
+	e6:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e6:SetCode(EVENT_LEAVE_FIELD_P)
+	e6:SetOperation(cm.checkop)
+	c:RegisterEffect(e6)
+	local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e7:SetCode(EVENT_LEAVE_FIELD)
+	e7:SetLabelObject(e6)
+	e7:SetOperation(cm.leave)
+	c:RegisterEffect(e7)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetDecktopGroup(tp,3)
@@ -49,28 +55,39 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 	local rg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,LOCATION_DECK,0,ac/800,ac/800,nil)
 	Duel.Remove(rg,POS_FACEDOWN,REASON_EFFECT)
 end
-function cm.remfilter(c)
-	return c:GetFlagEffect(m)<1
+function cm.remfilter(c,tp)
+	return c:GetFlagEffect(m)<1 and c:IsControler(tp)
 end
 function cm.discon(e,tp,eg,ep,ev,re,r,rp)
-	local sg=eg:Filter(cm.remfilter,nil)
+	local sg=eg:Filter(cm.remfilter,nil,tp)
 	return sg:GetCount()>0
 end
 function cm.disop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,m)
-	local num=Duel.Remove(eg:Filter(cm.remfilter,nil),POS_FACEDOWN,REASON_RULE)
+	local num=Duel.Remove(eg:Filter(cm.remfilter,nil,tp),POS_FACEDOWN,REASON_RULE)
 	if num<1 then return end
 	local tg=Duel.GetMatchingGroup(Card.IsFacedown,tp,LOCATION_REMOVED,LOCATION_REMOVED,nil)
 	local sg=tg:Filter(Card.IsAbleToHand,nil)
 	if sg:GetCount()>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local tg=sg:RandomSelect(tp,1)
+		local tg=sg:Select(tp,1,1,nil)
 		local tc=tg:GetFirst()
 		tc:RegisterFlagEffect(m,RESET_EVENT+RESETS_STANDARD-RESET_TOHAND,0,0)
 		Duel.SendtoHand(tc,tp,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc)
 	end
 end
-function cm.tdop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Damage(e:GetHandlerPlayer(),500*Duel.GetMatchingGroupCount(Card.IsFacedown,tp,LOCATION_REMOVED,0,nil),REASON_EFFECT)
+function cm.checkop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsDisabled() then
+		e:SetLabel(1)
+	else e:SetLabel(0) end
+end
+function cm.leave(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local ct=Duel.GetMatchingGroupCount(Card.IsFacedown,tp,LOCATION_REMOVED,0,nil)
+	if e:GetLabelObject():GetLabel()==0 and c:IsPreviousControler(tp) and ct>0 then
+		Duel.Hint(HINT_CARD,0,m)
+		Duel.Damage(tp,500*ct,REASON_EFFECT)
+	end
 end
