@@ -11,14 +11,26 @@ function cm.initial_effect(c)
 	e1:SetTarget(cm.distg)
 	e1:SetOperation(cm.disop)
 	c:RegisterEffect(e1)
+	--act in hand
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_TRAP_ACT_IN_HAND)
+	e2:SetCondition(cm.handcon)
+	c:RegisterEffect(e2)
 	
+end
+function cm.handcon(e)
+	return Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_MZONE,0)==0
 end
 function cm.cfilter(c,e,p)
 	return c:IsControler(p) and c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 and c:IsCanBeEffectTarget(e)
 end
+function cm.cofilter(c,tc)
+	return c:GetSequence()-tc:GetSequence()<=1 and tc:GetSequence()-c:GetSequence()<=1 and c:GetSequence()<5 --and c:IsCanBeEffectTarget(e)
+end
 function cm.disfilter(c,e)
 	local p=c:GetControler()
-	return c:GetSequence()<5 and c:IsCanBeEffectTarget(e) and c:GetColumnGroup(1,1):Filter(cm.cfilter,nil,e,p):GetCount()>=3
+	return c:GetSequence()<5 and c:IsCanBeEffectTarget(e) and Duel.GetMatchingGroup(cm.cofilter,p,LOCATION_MZONE,0,nil,c):Filter(cm.cfilter,nil,e,p):GetCount()>=3
 end
 function cm.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) end
@@ -27,19 +39,23 @@ function cm.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local tg=Duel.SelectMatchingCard(tp,cm.disfilter,tp,0,LOCATION_MZONE,1,1,nil,e)
 	local tc=tg:GetFirst()
 	e:SetLabelObject(tc)
-	local g=tc:GetColumnGroup(1,1)
+	local g=Duel.GetMatchingGroup(cm.cofilter,tc:GetControler(),LOCATION_MZONE,0,nil,tc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
-	local tg1=g:FilterSelect(tp,cm.cfilter,tp,0,LOCATION_MZONE,2,2,tc,e,1-tp)
+	local tg1=g:Select(tp,2,2,tc)
 	tg:Merge(tg1)
 	Duel.SetTargetCard(tg)
+	if e:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_MZONE,0)<Duel.GetFieldGroupCount(e:GetHandlerPlayer(),0,LOCATION_MZONE) then
+		Duel.SetChainLimit(aux.FALSE)
+	end
 end
 function cm.filter1(c,p)
-	return c:IsControler(p) and c:GetSequence()<5 and c:GetColumnGroup(1,1):Filter(cm.filter2,nil,e,p):GetCount()>=3
+	return c:IsControler(p) and c:GetSequence()<5 and Duel.GetMatchingGroup(cm.cofilter,p,LOCATION_MZONE,0,nil,c):Filter(cm.filter2,nil,e,p):GetCount()>=3
 end
 function cm.filter2(c,p)
 	return c:IsControler(p) and c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5
 end
 function cm.disop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local tg=g:Filter(Card.IsRelateToEffect,nil,e)
 	if tg:GetCount()<=0 then return end
