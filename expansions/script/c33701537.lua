@@ -69,9 +69,13 @@ function cm.setop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.rccon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFlagEffect(tp,m)<1 and Duel.GetTurnPlayer()~=tp
+	return true --Duel.GetFlagEffect(tp,m)<1 and Duel.GetTurnPlayer()~=tp
 end
 function cm.rcop(e,tp,eg,ep,ev,re,r,rp)
+	if cm[0]>0 then
+		--Duel.BreakEffect()
+		Duel.Recover(tp,cm[0]*500,REASON_EFFECT)
+	end
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if g:GetCount()==0 then return end
 	local ct1=Duel.GetFieldGroupCount(tp,LOCATION_REMOVED,0)*100
@@ -84,17 +88,13 @@ function cm.rcop(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		e1:SetValue(ct)
 		sc:RegisterEffect(e1)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		sc:RegisterEffect(e2)
 		sc=g:GetNext()
-	end
-	if cm[0]>0 then
-		Duel.BreakEffect()
-		Duel.Recover(tp,cm[0]*500,REASON_EFFECT)
 	end
 end
 function cm.cfilter(c)
